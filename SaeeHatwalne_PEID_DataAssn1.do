@@ -1,11 +1,12 @@
 *Saee Hatwalne
 *Political Economy of International Development
-*Data Assignment 1
 *February 2024
-*------------------------------------------------------------------------------
+********************************************************************************
+
 cd "/Users/saeehatwalne/Desktop/APU 2023-25/PE Intl Dev/data_assn1_PEID"
 clear
 use "maddison_coldata_merged.dta"
+
 
 *Q1.1 Line plot of GDPPC of India and the UK since 1500
 twoway (line gdppc year if country == "India" & year >= 1500, lcolor(green) lpattern(dash)) ///
@@ -82,25 +83,25 @@ twoway (line region_avg_gdppc year if region == "WE" & year > 1500) ///
        legend(order(1 "Western Europe" 2 "Latin America" 3 "Middle East and North Africa" 4 "Southern Europe" 5 "East and South East Asia" 6 "European offshoots" 7 "Sub Saharan Africa" 8 "South Asia")) ///
        name(region_avg_gdppc_plot, replace)
 *another way to do Q1.4
-// clear
-// use "maddison_coldata_merged_regions.dta"
-// collapse (mean) gdppc, by(year region) //collapsing the mean and then reshaping the data to wide
-// save "collapsed_data.dta", replace
-// clear
-// use "collapsed_data.dta"
-// reshape wide gdppc, i(year) j(region) string
-// twoway (line gdppcWE year if year > 1500) ///
-//        ||(line gdppcLA year if year > 1500) ///
-// 	   || (line gdppcSE year if year > 1500) ///
-// 	   || (line gdppcEO year if year > 1500)  ///
-// 	   || (line gdppcESEA year if year > 1500) ///
-// 	   || (line gdppcMENA year if year > 1500) ///
-// 	   || (line gdppcSA year if year > 1500) ///
-// 	   || (line gdppcSSA year if year > 1500), ///
-//        title("Region-wise Average GDP per Capita over Time") ///
-//        xtitle("Year") ytitle("GDP per Capita") ///
-//        legend(order(1 "WE" 2 "LA" 3 "MENA" 4 "SE" 5 "ESEA" 6 "EO" 7 "SSA" 8 "SA")) ///
-//        name(region_avg_gdppc_plot, replace)
+/*clear
+use "maddison_coldata_merged_regions.dta"
+collapse (mean) gdppc, by(year region) //collapsing the mean and then reshaping the data to wide
+save "collapsed_data.dta", replace
+clear
+use "collapsed_data.dta"
+reshape wide gdppc, i(year) j(region) string
+twoway (line gdppcWE year if year > 1500) ///
+       ||(line gdppcLA year if year > 1500) ///
+	   || (line gdppcSE year if year > 1500) ///
+	   || (line gdppcEO year if year > 1500)  ///
+	   || (line gdppcESEA year if year > 1500) ///
+	   || (line gdppcMENA year if year > 1500) ///
+	   || (line gdppcSA year if year > 1500) ///
+	   || (line gdppcSSA year if year > 1500), ///
+       title("Region-wise Average GDP per Capita over Time") ///
+       xtitle("Year") ytitle("GDP per Capita") ///
+       legend(order(1 "WE" 2 "LA" 3 "MENA" 4 "SE" 5 "ESEA" 6 "EO" 7 "SSA" 8 "SA")) ///
+       name(region_avg_gdppc_plot, replace)*/
 
 
 *Q1.5 Share of world GDP accounted by each region over time 
@@ -189,8 +190,9 @@ graph combine gdppc_over_time_EO_countries.gph ///
               col(1) xcommon ycommon
 			  graph save WE_SE_EO_graphs, replace
 	  
-*-------------------------------------------------------------------------------
-*Question2 Estimating the impact of colonialism on today's GDP per capita
+********************************************************************************
+*Question 2: Estimating the impact of colonialism on today's GDP per capita
+********************************************************************************
 clear
 //using the other dataset provided
 use "/Users/saeehatwalne/Desktop/APU 2023-25/PE Intl Dev/data_assn1_PEID/madison_coldat_small.dta"
@@ -208,6 +210,7 @@ regress ln_gdppc i.colonizer_n if year == 2018 & gdpgap<1 & !missing(colonizer)
 eststo reg1
 esttab reg1, r r2
 esttab reg1 using "reg1.tex", title("reg1") replace
+
 *Q2.2 Regress gdpgap for 2018 on variable colonizer
 eststo: regress gdpgap i.colonizer_n if year == 2018 & gdpgap<1 & !missing(colonizer)
 eststo reg2
@@ -260,5 +263,3 @@ twoway (scatter gdpgap col_duration), ///
        xtitle("Colonial Duration") ytitle("GDP Gap") ///
 	   name(scatter_colduration_gdpgap, replace)
 	   graph export scatter_colduration_gdpgap.png, replace
-	   
-	   
